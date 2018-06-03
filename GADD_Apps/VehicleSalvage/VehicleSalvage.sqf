@@ -4,8 +4,11 @@
 	Description: Salvage Vehicle Script for Exile. Allows for Salvaging Vehicles that are destroyed and turns it into Junk Metal at the player's feet.
 **/
 
-private _SalvageVehicle_DISALLOW_DURING_COMBAT 	= true;		//BOOLEAN - Set to true to prevent people salvaging their vehicles during combat.
-private _SalvageVehicle_TIME_TAKEN_TO_SALVAGE 	= 10; 		//SCALAR - Set in seconds how long you wish for salvaging to take players. (Default = 10)
+private ["_SalvageVehicle_DISALLOW_DURING_COMBAT","_SalvageVehicle_TIME_TAKEN_TO_SALVAGE","_keyDown","mouseDown","_startTime","_duration","_sleepTime",
+			"_progress","_uiControl","_percentage","_progressBarBackground","_progressBarMaxSize","_progressBar","_barColour","_junk"];
+
+_SalvageVehicle_DISALLOW_DURING_COMBAT 	= true;		//BOOLEAN - Set to true to prevent people salvaging their vehicles during combat.
+_SalvageVehicle_TIME_TAKEN_TO_SALVAGE 	= 10; 		//SCALAR - Set in seconds how long you wish for salvaging to take players. (Default = 10)
 
 // Do not edit below this line unless you know what you are doing!
 
@@ -25,18 +28,18 @@ if (ExileClientPlayerIsInCombat && _SalvageVehicle_DISALLOW_DURING_COMBAT) exitW
 disableSerialization;
 ("ExileActionProgressLayer" call BIS_fnc_rscLayer) cutRsc ["RscExileActionProgress", "PLAIN", 1, false];
 
-private _keyDown = (findDisplay 46) displayAddEventHandler ["KeyDown","_this call ExileClient_action_event_onKeyDown"];
-private _mouseDown = (findDisplay 46) displayAddEventHandler ["MouseButtonDown","_this call ExileClient_action_event_onMouseButtonDown"];
-private _startTime = diag_tickTime;
-private _duration = _SalvageVehicle_TIME_TAKEN_TO_SALVAGE;
-private _sleepTime = _duration / 100;
-private _progress = 0;
-private _uiControl = uiNamespace getVariable "RscExileActionProgress";   
-private _percentage = _uiControl displayCtrl 4002;
-private _progressBarBackground = _uiControl displayCtrl 4001;  
-private _progressBarMaxSize = ctrlPosition _progressBarBackground;
-private _progressBar = _uiControl displayCtrl 4000;  
-private _barColour = [];
+_keyDown = (findDisplay 46) displayAddEventHandler ["KeyDown","_this call ExileClient_action_event_onKeyDown"];
+_mouseDown = (findDisplay 46) displayAddEventHandler ["MouseButtonDown","_this call ExileClient_action_event_onMouseButtonDown"];
+_startTime = diag_tickTime;
+_duration = _SalvageVehicle_TIME_TAKEN_TO_SALVAGE;
+_sleepTime = _duration / 100;
+_progress = 0;
+_uiControl = uiNamespace getVariable "RscExileActionProgress";   
+_percentage = _uiControl displayCtrl 4002;
+_progressBarBackground = _uiControl displayCtrl 4001;  
+_progressBarMaxSize = ctrlPosition _progressBarBackground;
+_progressBar = _uiControl displayCtrl 4000;  
+_barColour = [];
 			
 player playAction "Exile_Acts_RepairVehicle01_Animation01";
 ["switchMoveRequest", [netId player, "Exile_Acts_RepairVehicle01_Animation01"]] call ExileClient_system_network_send;
@@ -75,7 +78,7 @@ catch
 				"SuccessTitleAndText", 
 				["Vehicle Salvage!", "You have successfully Salvaged this Vehicle! Junk Metal fell on the floor!"]
 			] call ExileClient_gui_toaster_addTemplateToast; 
-			private _junk = "groundweaponHolder" createVehicle position player;
+			_junk = "groundweaponHolder" createVehicle position player;
 			_junk addMagazineCargo ["Exile_Item_JunkMetal", 1];
 			_junk setPosATL getPosATL player;
 		};
