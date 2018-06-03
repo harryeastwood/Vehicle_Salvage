@@ -77,10 +77,11 @@ class Car
 				action = "_this call ExileClient_object_vehicle_drain";
 			};
 			// Salvage a vehicle
-            class GADDSalvage: ExileAbstractAction
-            {
-                title = "<t color='#ff0000'>GADD Salvage Vehicle</t>";
-                condition = "(!(alive (ExileClientInteractionObject)))";
-                action = "_this call GADD_SalvageVehicle";
+           		class GADDSalvage: ExileAbstractAction
+            		{
+                	title = "<t color='#ff0000'>GADD Salvage Vehicle</t>";
+                	condition = "(!(alive (ExileClientInteractionObject)))";
+                	action = "_this call GADD_SalvageVehicle";
 			};
 		};
+	};
