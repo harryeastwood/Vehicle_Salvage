@@ -1,5 +1,6 @@
 # Vehicle_Salvage
 Quick, easy, vehicle salvage script for Exile.
+Scroll wheel on the blown up vehicle, progress bar appears on the screen like it would for raiding/repairing etc. Junk Metal as a reward at your feet and the bodies of the occupants will also appear in front of you.
 
 ## Install Instructions!
 - Simply, drop the GADD_Apps folder into your mission.pbo (Exile.Tanoa.pbo etc.)
