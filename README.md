@@ -3,6 +3,7 @@ Quick, easy, vehicle salvage script for Exile.
 
 ## Install Instructions!
 - Simply, drop the GADD_Apps folder into your mission.pbo (Exile.Tanoa.pbo etc.)
+- There are a couple things you can modify in the VehicleSalvage.sqf found in the GADD_Apps/VehicleSalvage folder. Change those to how you want them...
 - Add the line from initPlayerLocal into your initPlayerLocal.sqf at the top somewhere near other includes or what not.
 - Copy Pasta the block of code from comfig.cpp and add it under class CfgInteractionMenus in your config.cpp under each vehicle type... E.g. class car, class tank, class boat etc. Like so...
 
