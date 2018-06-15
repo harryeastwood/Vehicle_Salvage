@@ -2,13 +2,18 @@
 	Script Name: Salvage Vehicle Script
 	Author: [GADD]Monkeynutz
 	Description: Salvage Vehicle Script for Exile. Allows for Salvaging Vehicles that are destroyed and turns it into Junk Metal at the player's feet.
+	Special thanks: El'Rabito! Thank you to him for the suggestions and testing!
 **/
 
-private ["_SalvageVehicle_DISALLOW_DURING_COMBAT","_SalvageVehicle_TIME_TAKEN_TO_SALVAGE","_keyDown","mouseDown","_startTime","_duration","_sleepTime",
-			"_progress","_uiControl","_percentage","_progressBarBackground","_progressBarMaxSize","_progressBar","_barColour","_junk"];
+private ["_SalvageVehicle_DISALLOW_DURING_COMBAT","_SalvageVehicle_TIME_TAKEN_TO_SALVAGE","_salvageVehicle_REQUIRE_TOOL","_salvageVehicle_TOOL","_toolName",
+		"_keyDown","_mouseDown","_startTime","_duration","_sleepTime","_progress","_uiControl","_percentage","_progressBarBackground","_progressBarMaxSize",
+		"_progressBar","_barColour","_junk","_givenJunk"];
 
-_SalvageVehicle_DISALLOW_DURING_COMBAT 	= true;		//BOOLEAN - Set to true to prevent people salvaging their vehicles during combat.
-_SalvageVehicle_TIME_TAKEN_TO_SALVAGE 	= 10; 		//SCALAR - Set in seconds how long you wish for salvaging to take players. (Default = 10)
+_SalvageVehicle_DISALLOW_DURING_COMBAT 	= true;					// Set to true to prevent people salvaging their vehicles during combat.
+_SalvageVehicle_TIME_TAKEN_TO_SALVAGE 	= 10; 					// Set in seconds how long you wish for salvaging to take players. (Default = 10)
+_salvageVehicle_REQUIRE_TOOL			= false; 				// Set to true means that salvaging a vehicle requires a tool
+_salvageVehicle_TOOL					= "Exile_Item_Grinder";	// Set the clasname of the tool required to salvage a vehicle
+_givenJunk								= [["Exile_Item_JunkMetal", 1],["Exile_Item_MetalPole", 1],["Exile_Item_MetalBoard", 1]];
 
 // Do not edit below this line unless you know what you are doing!
 
@@ -19,6 +24,18 @@ ExileClientActionDelayAbort = false;
 if (ExileClientPlayerIsInCombat && _SalvageVehicle_DISALLOW_DURING_COMBAT) exitWith
 {
 	["ErrorTitleAndText",["Vehicle Salvage!", "You cannot salvage a vehicle while in combat!"]] call ExileClient_gui_toaster_addTemplateToast;
+	ExileClientActionDelayShown = false;
+	ExileClientActionDelayAbort = false;	
+};
+
+//_toolName = _salvageVehicle_TOOL call ExileClient_util_gear_getConfigNameByClassName; //Broken Function
+_toolName = getText(configFile >> "CfgMagazines" >> _salvageVehicle_TOOL >> "displayName");
+
+if ((_salvageVehicle_REQUIRE_TOOL) && !(_salvageVehicle_TOOL in (items player))) exitWith
+{
+	//["ErrorTitleAndText",["Vehicle Salvage!", "You need to be carrying a %1 to salvage a vehicle!"]] call ExileClient_gui_toaster_addTemplateToast;
+	["ErrorTitleAndText",["Vehicle Salvage!", format ["You need to be carrying a %1 to salvage a vehicle!", _toolName]]] call ExileClient_gui_toaster_addTemplateToast;
+
 	ExileClientActionDelayShown = false;
 	ExileClientActionDelayAbort = false;	
 };
@@ -78,9 +95,11 @@ catch
 				"SuccessTitleAndText", 
 				["Vehicle Salvage!", "You have successfully Salvaged this Vehicle! Junk Metal fell on the floor!"]
 			] call ExileClient_gui_toaster_addTemplateToast; 
-			_junk = "groundweaponHolder" createVehicle position player;
-			_junk addMagazineCargo ["Exile_Item_JunkMetal", 1];
-			_junk setPosATL getPosATL player;
+			{
+				_junk = "groundweaponHolder" createVehicle position player;
+				_junk addMagazineCargo _x;
+				_junk setPosATL getPosATL player;
+			} forEach _givenJunk;
 		};
 		case 1: 	
 		{ 
