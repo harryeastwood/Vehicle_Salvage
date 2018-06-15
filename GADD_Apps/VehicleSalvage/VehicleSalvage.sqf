@@ -7,7 +7,7 @@
 
 private ["_SalvageVehicle_DISALLOW_DURING_COMBAT","_SalvageVehicle_TIME_TAKEN_TO_SALVAGE","_salvageVehicle_REQUIRE_TOOL","_salvageVehicle_TOOL","_toolName",
 		"_keyDown","_mouseDown","_startTime","_duration","_sleepTime","_progress","_uiControl","_percentage","_progressBarBackground","_progressBarMaxSize",
-		"_progressBar","_barColour","_junk","_givenJunk"];
+		"_progressBar","_barColour","_junk","_givenJunk","_scrapVehicle","_vehClass","_vehName"];
 
 _SalvageVehicle_DISALLOW_DURING_COMBAT 	= true;					// Set to true to prevent people salvaging their vehicles during combat.
 _SalvageVehicle_TIME_TAKEN_TO_SALVAGE 	= 10; 					// Set in seconds how long you wish for salvaging to take players. (Default = 10)
@@ -16,6 +16,10 @@ _salvageVehicle_TOOL					= "Exile_Item_Grinder";	// Set the clasname of the tool
 _givenJunk								= [["Exile_Item_JunkMetal", 1],["Exile_Item_MetalPole", 1],["Exile_Item_MetalBoard", 1]];
 
 // Do not edit below this line unless you know what you are doing!
+
+_scrapVehicle = (_this select 0);
+_vehClass = typeOf (_this select 0);
+_vehName = getText(configFile >> "CfgVehicles" >> _vehClass >> "displayName");
 
 if (ExileClientActionDelayShown) exitWith { false };
 ExileClientActionDelayShown = true;
@@ -34,13 +38,13 @@ _toolName = getText(configFile >> "CfgMagazines" >> _salvageVehicle_TOOL >> "dis
 if ((_salvageVehicle_REQUIRE_TOOL) && !(_salvageVehicle_TOOL in (items player))) exitWith
 {
 	//["ErrorTitleAndText",["Vehicle Salvage!", "You need to be carrying a %1 to salvage a vehicle!"]] call ExileClient_gui_toaster_addTemplateToast;
-	["ErrorTitleAndText",["Vehicle Salvage!", format ["You need to be carrying a %1 to salvage a vehicle!", _toolName]]] call ExileClient_gui_toaster_addTemplateToast;
+	["ErrorTitleAndText",["Vehicle Salvage!", format ["You need to be carrying a %1 to salvage a %2!", _toolName, _vehName]]] call ExileClient_gui_toaster_addTemplateToast;
 
 	ExileClientActionDelayShown = false;
 	ExileClientActionDelayAbort = false;	
 };
 
-["InfoTitleAndText",["Vehicle Salvage!", "Salvaging Vehicle!"]] call ExileClient_gui_toaster_addTemplateToast;
+["InfoTitleAndText",["Vehicle Salvage!", format ["Salvaging %1!", _vehName]]] call ExileClient_gui_toaster_addTemplateToast;
 
 disableSerialization;
 ("ExileActionProgressLayer" call BIS_fnc_rscLayer) cutRsc ["RscExileActionProgress", "PLAIN", 1, false];
@@ -89,12 +93,9 @@ catch
 		case 0:
 		{
 			_barColour = [0.7, 0.93, 0, 1];
-			deleteVehicle (_this select 0);
+			deleteVehicle _scrapVehicle;
 
-			[
-				"SuccessTitleAndText", 
-				["Vehicle Salvage!", "You have successfully Salvaged this Vehicle! Junk Metal fell on the floor!"]
-			] call ExileClient_gui_toaster_addTemplateToast; 
+			["SuccessTitleAndText", ["Vehicle Salvage!", format ["You have successfully Salvaged this %1! Junk Metal fell on the floor!", _vehName]]] call ExileClient_gui_toaster_addTemplateToast; 
 			{
 				_junk = "groundweaponHolder" createVehicle position player;
 				_junk addMagazineCargo _x;
@@ -103,10 +104,7 @@ catch
 		};
 		case 1: 	
 		{ 
-			[
-				"ErrorTitleAndText", 
-				["Vehicle Salvage!", "Salvaging Canceled!"]
-			] call ExileClient_gui_toaster_addTemplateToast;
+			["ErrorTitleAndText", ["Vehicle Salvage!", "Salvaging Canceled!"]] call ExileClient_gui_toaster_addTemplateToast;
 			_barColour = [0.82, 0.82, 0.82, 1];
 		};
 	};	
