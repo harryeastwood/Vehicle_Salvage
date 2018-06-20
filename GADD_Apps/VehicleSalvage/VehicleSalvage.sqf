@@ -5,14 +5,14 @@
 	Special thanks: El'Rabito! Thank you to him for the suggestions and testing!
 **/
 
+#include "customize.sqf"
+
 private ["_SalvageVehicle_DISALLOW_DURING_COMBAT","_SalvageVehicle_TIME_TAKEN_TO_SALVAGE","_salvageVehicle_REQUIRE_TOOL","_salvageVehicle_TOOLS","_toolName",
 		"_keyDown","_mouseDown","_startTime","_duration","_sleepTime","_progress","_uiControl","_percentage","_progressBarBackground","_progressBarMaxSize",
 		"_progressBar","_barColour","_junk","_givenJunk","_scrapVehicle","_vehClass","_vehName","_cfgClass","_toolNameArray","_salvageVehicle_GIVE_JUNK",
 		"_salvageVehicle_GIVE_JUNK_PERCENTAGE","_counter","_salvageVehicle_REQUIRE_TOOL_DIFFERENT","_salvageVehicle_REQUIRE_TOOLS_CAR","_salvageVehicle_REQUIRE_TOOLS_TANK",
 		"_salvageVehicle_REQUIRE_TOOLS_AIR","_salvageVehicle_REQUIRE_TOOLS_SHIP","_salvageVehicle_GIVE_JUNK_DIFFERENT","_givenJunkCar","_givenJunkTank","_givenJunkAir",
 		"_givenJunkShip"];
-
-#include "customize.sqf"
 
 // Do not edit below this line unless you know what you are doing!
 
