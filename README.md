@@ -1,10 +1,11 @@
-# Vehicle Salvage v1.0.0
+# Vehicle Salvage v1.0.1
 Quick, easy, vehicle salvage script for Exile.
 Scroll wheel on the blown up vehicle, progress bar appears on the screen like it would for raiding/repairing etc. Junk Metal as a reward at your feet and the bodies of the occupants will also appear in front of you.
+If you need help with my scripts, visit my discord: https://discord.gg/Sm3HGwV - Perma Join link
 
 ## Install Instructions!
 - Simply, drop the GADD_Apps folder into your mission.pbo (Exile.Tanoa.pbo etc.)
-- There are a couple things you can modify in the VehicleSalvage.sqf found in the GADD_Apps/VehicleSalvage folder. Change those to how you want them...
+- Customize the settings of the script by editing the "Customize.sqf".
 - Add the line from initPlayerLocal into your initPlayerLocal.sqf at the top somewhere near other includes or what not.
 - Copy Pasta the block of code from comfig.cpp and add it under class CfgInteractionMenus in your config.cpp under each vehicle type... E.g. class car, class tank, class boat etc. Like so...
 
