@@ -1,22 +1,18 @@
 /**
 	Script Name: Salvage Vehicle Script
 	Author: [GADD]Monkeynutz
-	Description: Salvage Vehicle Script for Exile. Allows for Salvaging Vehicles that are destroyed and turns it into Junk Metal at the player's feet.
+	Description: Salvage Vehicle Script for Exile. Allows for Salvaging Vehicles that are destroyed and turns it into Junk at the player's feet.
 	Special thanks: El'Rabito! Thank you to him for the suggestions and testing!
 **/
 
 private ["_SalvageVehicle_DISALLOW_DURING_COMBAT","_SalvageVehicle_TIME_TAKEN_TO_SALVAGE","_salvageVehicle_REQUIRE_TOOL","_salvageVehicle_TOOLS","_toolName",
 		"_keyDown","_mouseDown","_startTime","_duration","_sleepTime","_progress","_uiControl","_percentage","_progressBarBackground","_progressBarMaxSize",
 		"_progressBar","_barColour","_junk","_givenJunk","_scrapVehicle","_vehClass","_vehName","_cfgClass","_toolNameArray","_salvageVehicle_GIVE_JUNK",
-		"_salvageVehicle_GIVE_JUNK_PERCENTAGE","_counter"];
+		"_salvageVehicle_GIVE_JUNK_PERCENTAGE","_counter","_salvageVehicle_REQUIRE_TOOL_DIFFERENT","_salvageVehicle_REQUIRE_TOOLS_CAR","_salvageVehicle_REQUIRE_TOOLS_TANK",
+		"_salvageVehicle_REQUIRE_TOOLS_AIR","_salvageVehicle_REQUIRE_TOOLS_SHIP","_salvageVehicle_GIVE_JUNK_DIFFERENT","_givenJunkCar","_givenJunkTank","_givenJunkAir",
+		"_givenJunkShip"];
 
-_SalvageVehicle_DISALLOW_DURING_COMBAT 	= true;					// Set to true to prevent people salvaging their vehicles during combat.
-_SalvageVehicle_TIME_TAKEN_TO_SALVAGE 	= 10; 					// Set in seconds how long you wish for salvaging to take players. (Default = 10)
-_salvageVehicle_REQUIRE_TOOL			= false; 				// Set to true means that salvaging a vehicle requires a tool
-_salvageVehicle_TOOLS					= ["Exile_Item_Grinder"];	// Set the clasname of the tool required to salvage a vehicle
-_salvageVehicle_GIVE_JUNK				= true;					// Set this to true to give junk back to the player when salvaging a wreck, set to false to prevent junk dropping.
-_salvageVehicle_GIVE_JUNK_PERCENTAGE	= 100;					// Set the percentage chance of junk to drop. E.g. set to 50 and there's a 50% chance of each item in _givenJunk spawning.
-_givenJunk								= [["Exile_Item_JunkMetal", 1],["Exile_Item_MetalPole", 1],["Exile_Item_MetalBoard", 1]];	// Set the Junk returned to the player for salvaging a vehicle.
+#include "customize.sqf"
 
 // Do not edit below this line unless you know what you are doing!
 
@@ -38,20 +34,85 @@ if (ExileClientPlayerIsInCombat && _SalvageVehicle_DISALLOW_DURING_COMBAT) exitW
 
 _toolNameArray = [];
 
-if (_salvageVehicle_REQUIRE_TOOL) exitWith
+if (_salvageVehicle_REQUIRE_TOOL) then
 {
+	if (_salvageVehicle_REQUIRE_TOOL_DIFFERENT) then
 	{
-		_cfgClass = _x call ExileClient_util_gear_getConfigNameByClassName;	// Should return "CfgMagazines"
-		_toolName = getText(configFile >> _cfgClass >> _x >> "displayName");
-	
-		if !(_x in (items player)) exitWith
+		if (_vehClass isKindOf "Car") then
 		{
-			["ErrorTitleAndText",["Vehicle Salvage!", format ["You need to be carrying a %1 to salvage a %2!", _toolName, _vehName]]] call ExileClient_gui_toaster_addTemplateToast;
-	
-			ExileClientActionDelayShown = false;
-			ExileClientActionDelayAbort = false;	
+			{
+				_cfgClass = _x call ExileClient_util_gear_getConfigNameByClassName;	// Should return "CfgMagazines"
+				_toolName = getText(configFile >> _cfgClass >> _x >> "displayName");
+			
+				if !(_x in (items player)) exitWith
+				{
+					["ErrorTitleAndText",["Vehicle Salvage!", format ["You need to be carrying a %1 to salvage a %2!", _toolName, _vehName]]] call ExileClient_gui_toaster_addTemplateToast;
+			
+					ExileClientActionDelayShown = false;
+					ExileClientActionDelayAbort = false;	
+				};
+			} forEach _salvageVehicle_REQUIRE_TOOLS_CAR;
 		};
-	} forEach _salvageVehicle_TOOLS;
+		if (_vehClass isKindOf "Tank") then
+		{
+			{
+				_cfgClass = _x call ExileClient_util_gear_getConfigNameByClassName;	// Should return "CfgMagazines"
+				_toolName = getText(configFile >> _cfgClass >> _x >> "displayName");
+			
+				if !(_x in (items player)) exitWith
+				{
+					["ErrorTitleAndText",["Vehicle Salvage!", format ["You need to be carrying a %1 to salvage a %2!", _toolName, _vehName]]] call ExileClient_gui_toaster_addTemplateToast;
+			
+					ExileClientActionDelayShown = false;
+					ExileClientActionDelayAbort = false;	
+				};
+			} forEach _salvageVehicle_REQUIRE_TOOLS_TANK;
+		};
+		if (_vehClass isKindOf "Air") then
+		{
+			{
+				_cfgClass = _x call ExileClient_util_gear_getConfigNameByClassName;	// Should return "CfgMagazines"
+				_toolName = getText(configFile >> _cfgClass >> _x >> "displayName");
+			
+				if !(_x in (items player)) exitWith
+				{
+					["ErrorTitleAndText",["Vehicle Salvage!", format ["You need to be carrying a %1 to salvage a %2!", _toolName, _vehName]]] call ExileClient_gui_toaster_addTemplateToast;
+			
+					ExileClientActionDelayShown = false;
+					ExileClientActionDelayAbort = false;	
+				};
+			} forEach _salvageVehicle_REQUIRE_TOOLS_AIR;
+		};
+		if (_vehClass isKindOf "Ship") then
+		{
+			{
+				_cfgClass = _x call ExileClient_util_gear_getConfigNameByClassName;	// Should return "CfgMagazines"
+				_toolName = getText(configFile >> _cfgClass >> _x >> "displayName");
+			
+				if !(_x in (items player)) exitWith
+				{
+					["ErrorTitleAndText",["Vehicle Salvage!", format ["You need to be carrying a %1 to salvage a %2!", _toolName, _vehName]]] call ExileClient_gui_toaster_addTemplateToast;
+			
+					ExileClientActionDelayShown = false;
+					ExileClientActionDelayAbort = false;	
+				};
+			} forEach _salvageVehicle_REQUIRE_TOOLS_SHIP;
+		};
+	}else
+	{
+		{
+			_cfgClass = _x call ExileClient_util_gear_getConfigNameByClassName;	// Should return "CfgMagazines"
+			_toolName = getText(configFile >> _cfgClass >> _x >> "displayName");
+		
+			if !(_x in (items player)) exitWith
+			{
+				["ErrorTitleAndText",["Vehicle Salvage!", format ["You need to be carrying a %1 to salvage a %2!", _toolName, _vehName]]] call ExileClient_gui_toaster_addTemplateToast;
+		
+				ExileClientActionDelayShown = false;
+				ExileClientActionDelayAbort = false;	
+			};
+		} forEach _salvageVehicle_TOOLS;
+	};
 };
 
 ["InfoTitleAndText",["Vehicle Salvage!", format ["Salvaging %1!", _vehName]]] call ExileClient_gui_toaster_addTemplateToast;
@@ -115,13 +176,58 @@ catch
 				{
 					["SuccessTitleAndText", ["Vehicle Salvage!", format ["You have successfully Salvaged this %1! Some Junk might have fallen on the floor!", _vehName]]] call ExileClient_gui_toaster_addTemplateToast;
 				};
+				if (_salvageVehicle_GIVE_JUNK_DIFFERENT) then
 				{
-					_counter = round (random 100);
-					if (_counter >= _salvageVehicle_GIVE_JUNK_PERCENTAGE) then
+					if (_vehClass isKindOf "Car") then
 					{
-						_junk addMagazineCargo _x;
+						{
+							_counter = round (random 100);
+							if (_counter >= _salvageVehicle_GIVE_JUNK_PERCENTAGE) then
+							{
+								_junk addMagazineCargo _x;
+							};
+						} forEach _givenJunkCar;
 					};
-				} forEach _givenJunk;
+					if (_vehClass isKindOf "Tank") then
+					{
+						{
+							_counter = round (random 100);
+							if (_counter >= _salvageVehicle_GIVE_JUNK_PERCENTAGE) then
+							{
+								_junk addMagazineCargo _x;
+							};
+						} forEach _givenJunkTank;
+					};
+					if (_vehClass isKindOf "Air") then
+					{
+						{
+							_counter = round (random 100);
+							if (_counter >= _salvageVehicle_GIVE_JUNK_PERCENTAGE) then
+							{
+								_junk addMagazineCargo _x;
+							};
+						} forEach _givenJunkAir;
+					};
+					if (_vehClass isKindOf "Ship") then
+					{
+						{
+							_counter = round (random 100);
+							if (_counter >= _salvageVehicle_GIVE_JUNK_PERCENTAGE) then
+							{
+								_junk addMagazineCargo _x;
+							};
+						} forEach _givenJunkShip;
+					};
+				}else
+				{
+					{
+						_counter = round (random 100);
+						if (_counter >= _salvageVehicle_GIVE_JUNK_PERCENTAGE) then
+						{
+							_junk addMagazineCargo _x;
+						};
+					} forEach _givenJunk;
+				};
 				_junk setPosATL getPosATL player;
 			}else
 			{
