@@ -1,4 +1,4 @@
-# Vehicle Salvage V1.0.0
+# Vehicle Salvage v1.0.0
 Quick, easy, vehicle salvage script for Exile.
 Scroll wheel on the blown up vehicle, progress bar appears on the screen like it would for raiding/repairing etc. Junk Metal as a reward at your feet and the bodies of the occupants will also appear in front of you.
 
