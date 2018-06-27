@@ -7,12 +7,8 @@
 
 #include "customize.sqf"
 
-private ["_SalvageVehicle_DISALLOW_DURING_COMBAT","_SalvageVehicle_TIME_TAKEN_TO_SALVAGE","_salvageVehicle_REQUIRE_TOOL","_salvageVehicle_TOOLS","_toolName",
-		"_keyDown","_mouseDown","_startTime","_duration","_sleepTime","_progress","_uiControl","_percentage","_progressBarBackground","_progressBarMaxSize",
-		"_progressBar","_barColour","_junk","_givenJunk","_scrapVehicle","_vehClass","_vehName","_cfgClass","_toolNameArray","_salvageVehicle_GIVE_JUNK",
-		"_salvageVehicle_GIVE_JUNK_PERCENTAGE","_counter","_salvageVehicle_REQUIRE_TOOL_DIFFERENT","_salvageVehicle_REQUIRE_TOOLS_CAR","_salvageVehicle_REQUIRE_TOOLS_TANK",
-		"_salvageVehicle_REQUIRE_TOOLS_AIR","_salvageVehicle_REQUIRE_TOOLS_SHIP","_salvageVehicle_GIVE_JUNK_DIFFERENT","_givenJunkCar","_givenJunkTank","_givenJunkAir",
-		"_givenJunkShip"];
+private ["_keyDown","_mouseDown","_startTime","_duration","_sleepTime","_progress","_uiControl","_percentage","_progressBarBackground","_progressBarMaxSize",
+		"_progressBar","_barColour","_junk","_scrapVehicle","_vehClass","_vehName","_cfgClass","_toolNameArray","_counter"];
 
 // Do not edit below this line unless you know what you are doing!
 
@@ -25,7 +21,7 @@ if (ExileClientActionDelayShown) exitWith { false };
 ExileClientActionDelayShown = true;
 ExileClientActionDelayAbort = false;
 
-if (ExileClientPlayerIsInCombat && _SalvageVehicle_DISALLOW_DURING_COMBAT) exitWith
+if (ExileClientPlayerIsInCombat && SalvageVehicle_DISALLOW_DURING_COMBAT) exitWith
 {
 	["ErrorTitleAndText",["Vehicle Salvage!", "You cannot salvage a vehicle while in combat!"]] call ExileClient_gui_toaster_addTemplateToast;
 	ExileClientActionDelayShown = false;
@@ -34,14 +30,14 @@ if (ExileClientPlayerIsInCombat && _SalvageVehicle_DISALLOW_DURING_COMBAT) exitW
 
 _toolNameArray = [];
 
-if (_salvageVehicle_REQUIRE_TOOL) then
+if (salvageVehicle_REQUIRE_TOOL) then
 {
-	if (_salvageVehicle_REQUIRE_TOOL_DIFFERENT) then
+	if (salvageVehicle_REQUIRE_TOOL_DIFFERENT) then
 	{
 		if (_vehClass isKindOf "Car") then
 		{
 			{
-				_cfgClass = _x call ExileClient_util_gear_getConfigNameByClassName;	// Should return "CfgMagazines"
+				_cfgClass = _x call ExileClient_util_gear_getConfigNameByClassName;
 				_toolName = getText(configFile >> _cfgClass >> _x >> "displayName");
 			
 				if !(_x in (items player)) exitWith
@@ -51,12 +47,12 @@ if (_salvageVehicle_REQUIRE_TOOL) then
 					ExileClientActionDelayShown = false;
 					ExileClientActionDelayAbort = false;	
 				};
-			} forEach _salvageVehicle_REQUIRE_TOOLS_CAR;
+			} forEach salvageVehicle_REQUIRE_TOOLS_CAR;
 		};
 		if (_vehClass isKindOf "Tank") then
 		{
 			{
-				_cfgClass = _x call ExileClient_util_gear_getConfigNameByClassName;	// Should return "CfgMagazines"
+				_cfgClass = _x call ExileClient_util_gear_getConfigNameByClassName;
 				_toolName = getText(configFile >> _cfgClass >> _x >> "displayName");
 			
 				if !(_x in (items player)) exitWith
@@ -66,12 +62,12 @@ if (_salvageVehicle_REQUIRE_TOOL) then
 					ExileClientActionDelayShown = false;
 					ExileClientActionDelayAbort = false;	
 				};
-			} forEach _salvageVehicle_REQUIRE_TOOLS_TANK;
+			} forEach salvageVehicle_REQUIRE_TOOLS_TANK;
 		};
 		if (_vehClass isKindOf "Air") then
 		{
 			{
-				_cfgClass = _x call ExileClient_util_gear_getConfigNameByClassName;	// Should return "CfgMagazines"
+				_cfgClass = _x call ExileClient_util_gear_getConfigNameByClassName;
 				_toolName = getText(configFile >> _cfgClass >> _x >> "displayName");
 			
 				if !(_x in (items player)) exitWith
@@ -81,12 +77,12 @@ if (_salvageVehicle_REQUIRE_TOOL) then
 					ExileClientActionDelayShown = false;
 					ExileClientActionDelayAbort = false;	
 				};
-			} forEach _salvageVehicle_REQUIRE_TOOLS_AIR;
+			} forEach salvageVehicle_REQUIRE_TOOLS_AIR;
 		};
 		if (_vehClass isKindOf "Ship") then
 		{
 			{
-				_cfgClass = _x call ExileClient_util_gear_getConfigNameByClassName;	// Should return "CfgMagazines"
+				_cfgClass = _x call ExileClient_util_gear_getConfigNameByClassName;
 				_toolName = getText(configFile >> _cfgClass >> _x >> "displayName");
 			
 				if !(_x in (items player)) exitWith
@@ -96,7 +92,7 @@ if (_salvageVehicle_REQUIRE_TOOL) then
 					ExileClientActionDelayShown = false;
 					ExileClientActionDelayAbort = false;	
 				};
-			} forEach _salvageVehicle_REQUIRE_TOOLS_SHIP;
+			} forEach salvageVehicle_REQUIRE_TOOLS_SHIP;
 		};
 	}else
 	{
@@ -111,7 +107,7 @@ if (_salvageVehicle_REQUIRE_TOOL) then
 				ExileClientActionDelayShown = false;
 				ExileClientActionDelayAbort = false;	
 			};
-		} forEach _salvageVehicle_TOOLS;
+		} forEach salvageVehicle_TOOLS;
 	};
 };
 
@@ -123,7 +119,7 @@ disableSerialization;
 _keyDown = (findDisplay 46) displayAddEventHandler ["KeyDown","_this call ExileClient_action_event_onKeyDown"];
 _mouseDown = (findDisplay 46) displayAddEventHandler ["MouseButtonDown","_this call ExileClient_action_event_onMouseButtonDown"];
 _startTime = diag_tickTime;
-_duration = _SalvageVehicle_TIME_TAKEN_TO_SALVAGE;
+_duration = SalvageVehicle_TIME_TAKEN_TO_SALVAGE;
 _sleepTime = _duration / 100;
 _progress = 0;
 _uiControl = uiNamespace getVariable "RscExileActionProgress";   
@@ -166,67 +162,67 @@ catch
 			_barColour = [0.7, 0.93, 0, 1];
 			deleteVehicle _scrapVehicle;
  
-			if (_salvageVehicle_GIVE_JUNK) then
+			if (salvageVehicle_GIVE_JUNK) then
 			{
 				_junk = "groundweaponHolder" createVehicle position player;
-				if (_salvageVehicle_GIVE_JUNK_PERCENTAGE == 100) then
+				if (salvageVehicle_GIVE_JUNK_PERCENTAGE == 100) then
 				{
 					["SuccessTitleAndText", ["Vehicle Salvage!", format ["You have successfully Salvaged this %1! Some Junk has fallen on the floor!", _vehName]]] call ExileClient_gui_toaster_addTemplateToast;
 				}else
 				{
 					["SuccessTitleAndText", ["Vehicle Salvage!", format ["You have successfully Salvaged this %1! Some Junk might have fallen on the floor!", _vehName]]] call ExileClient_gui_toaster_addTemplateToast;
 				};
-				if (_salvageVehicle_GIVE_JUNK_DIFFERENT) then
+				if (salvageVehicle_GIVE_JUNK_DIFFERENT) then
 				{
 					if (_vehClass isKindOf "Car") then
 					{
 						{
 							_counter = round (random 100);
-							if (_counter >= _salvageVehicle_GIVE_JUNK_PERCENTAGE) then
+							if (_counter >= salvageVehicle_GIVE_JUNK_PERCENTAGE) then
 							{
 								_junk addMagazineCargo _x;
 							};
-						} forEach _givenJunkCar;
+						} forEach salvageVehicle_givenJunkCar;
 					};
 					if (_vehClass isKindOf "Tank") then
 					{
 						{
 							_counter = round (random 100);
-							if (_counter >= _salvageVehicle_GIVE_JUNK_PERCENTAGE) then
+							if (_counter >= salvageVehicle_GIVE_JUNK_PERCENTAGE) then
 							{
 								_junk addMagazineCargo _x;
 							};
-						} forEach _givenJunkTank;
+						} forEach salvageVehicle_givenJunkTank;
 					};
 					if (_vehClass isKindOf "Air") then
 					{
 						{
 							_counter = round (random 100);
-							if (_counter >= _salvageVehicle_GIVE_JUNK_PERCENTAGE) then
+							if (_counter >= salvageVehicle_GIVE_JUNK_PERCENTAGE) then
 							{
 								_junk addMagazineCargo _x;
 							};
-						} forEach _givenJunkAir;
+						} forEach salvageVehicle_givenJunkAir;
 					};
 					if (_vehClass isKindOf "Ship") then
 					{
 						{
 							_counter = round (random 100);
-							if (_counter >= _salvageVehicle_GIVE_JUNK_PERCENTAGE) then
+							if (_counter >= salvageVehicle_GIVE_JUNK_PERCENTAGE) then
 							{
 								_junk addMagazineCargo _x;
 							};
-						} forEach _givenJunkShip;
+						} forEach salvageVehicle_givenJunkShip;
 					};
 				}else
 				{
 					{
 						_counter = round (random 100);
-						if (_counter >= _salvageVehicle_GIVE_JUNK_PERCENTAGE) then
+						if (_counter >= salvageVehicle_GIVE_JUNK_PERCENTAGE) then
 						{
 							_junk addMagazineCargo _x;
 						};
-					} forEach _givenJunk;
+					} forEach salvageVehicle_givenJunk;
 				};
 				_junk setPosATL getPosATL player;
 			}else
