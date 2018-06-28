@@ -165,7 +165,7 @@ catch
 					{
 						{
 							_counter = round (random 100);
-							if (_counter >= salvageVehicle_GIVE_JUNK_PERCENTAGE) then
+							if (_counter <= salvageVehicle_GIVE_JUNK_PERCENTAGE) then
 							{
 								_junk addMagazineCargo _x;
 							};
@@ -175,7 +175,7 @@ catch
 					{
 						{
 							_counter = round (random 100);
-							if (_counter >= salvageVehicle_GIVE_JUNK_PERCENTAGE) then
+							if (_counter <= salvageVehicle_GIVE_JUNK_PERCENTAGE) then
 							{
 								_junk addMagazineCargo _x;
 							};
@@ -185,7 +185,7 @@ catch
 					{
 						{
 							_counter = round (random 100);
-							if (_counter >= salvageVehicle_GIVE_JUNK_PERCENTAGE) then
+							if (_counter <= salvageVehicle_GIVE_JUNK_PERCENTAGE) then
 							{
 								_junk addMagazineCargo _x;
 							};
@@ -195,7 +195,7 @@ catch
 					{
 						{
 							_counter = round (random 100);
-							if (_counter >= salvageVehicle_GIVE_JUNK_PERCENTAGE) then
+							if (_counter <= salvageVehicle_GIVE_JUNK_PERCENTAGE) then
 							{
 								_junk addMagazineCargo _x;
 							};
@@ -205,7 +205,7 @@ catch
 				{
 					{
 						_counter = round (random 100);
-						if (_counter >= salvageVehicle_GIVE_JUNK_PERCENTAGE) then
+						if (_counter <= salvageVehicle_GIVE_JUNK_PERCENTAGE) then
 						{
 							_junk addMagazineCargo _x;
 						};
