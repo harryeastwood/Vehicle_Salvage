@@ -39,7 +39,7 @@ salvageVehicle_GIVE_JUNK				= true;
 salvageVehicle_GIVE_JUNK_DIFFERENT		= false;
 
 // Set the percentage chance of junk to drop. E.g. set to 50 and there's a 50% chance of each item in _givenJunk spawning.
-salvageVehicle_GIVE_JUNK_PERCENTAGE	= 100;
+salvageVehicle_GIVE_JUNK_PERCENTAGE		= 100;
 
 // Set the Junk returned to the player for salvaging a vehicle.
 salvageVehicle_givenJunk				= [["Exile_Item_JunkMetal", 1],["Exile_Item_MetalPole", 1],["Exile_Item_MetalBoard", 1]];
