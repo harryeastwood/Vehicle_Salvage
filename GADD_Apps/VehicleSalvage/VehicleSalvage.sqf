@@ -15,7 +15,10 @@ _vehClass = typeOf (_this select 0);
 _cfgClass = _vehClass call ExileClient_util_gear_getConfigNameByClassName;
 _vehName = getText(configFile >> _cfgClass >> _vehClass >> "displayName");
 
-if (ExileClientActionDelayShown) exitWith { false };
+if (ExileClientActionDelayShown) exitWith
+{
+	false
+};
 ExileClientActionDelayShown = true;
 ExileClientActionDelayAbort = false;
 
@@ -28,7 +31,7 @@ if (ExileClientPlayerIsInCombat && SalvageVehicle_DISALLOW_DURING_COMBAT) exitWi
 
 _toolNameArray = [];
 
-if (salvageVehicle_REQUIRE_TOOL) exitWith
+if (salvageVehicle_REQUIRE_TOOL) then
 {
 	if (salvageVehicle_REQUIRE_TOOL_DIFFERENT) then
 	{
@@ -41,6 +44,9 @@ if (salvageVehicle_REQUIRE_TOOL) exitWith
 				if !(_x in (items player)) then
 				{
 					["ErrorTitleAndText",["Vehicle Salvage!", format ["You need to be carrying a %1 to salvage a %2!", _toolName, _vehName]]] call ExileClient_gui_toaster_addTemplateToast;
+			
+					ExileClientActionDelayShown = false;
+					ExileClientActionDelayAbort = false;
 				};
 			} forEach salvageVehicle_REQUIRE_TOOLS_CAR;
 		};
@@ -53,6 +59,9 @@ if (salvageVehicle_REQUIRE_TOOL) exitWith
 				if !(_x in (items player)) then
 				{
 					["ErrorTitleAndText",["Vehicle Salvage!", format ["You need to be carrying a %1 to salvage a %2!", _toolName, _vehName]]] call ExileClient_gui_toaster_addTemplateToast;
+			
+					ExileClientActionDelayShown = false;
+					ExileClientActionDelayAbort = false;
 				};
 			} forEach salvageVehicle_REQUIRE_TOOLS_TANK;
 		};
@@ -65,6 +74,9 @@ if (salvageVehicle_REQUIRE_TOOL) exitWith
 				if !(_x in (items player)) then
 				{
 					["ErrorTitleAndText",["Vehicle Salvage!", format ["You need to be carrying a %1 to salvage a %2!", _toolName, _vehName]]] call ExileClient_gui_toaster_addTemplateToast;
+			
+					ExileClientActionDelayShown = false;
+					ExileClientActionDelayAbort = false;
 				};
 			} forEach salvageVehicle_REQUIRE_TOOLS_AIR;
 		};
@@ -77,6 +89,9 @@ if (salvageVehicle_REQUIRE_TOOL) exitWith
 				if !(_x in (items player)) then
 				{
 					["ErrorTitleAndText",["Vehicle Salvage!", format ["You need to be carrying a %1 to salvage a %2!", _toolName, _vehName]]] call ExileClient_gui_toaster_addTemplateToast;
+			
+					ExileClientActionDelayShown = false;
+					ExileClientActionDelayAbort = false;
 				};
 			} forEach salvageVehicle_REQUIRE_TOOLS_SHIP;
 		};
@@ -89,13 +104,12 @@ if (salvageVehicle_REQUIRE_TOOL) exitWith
 			if !(_x in (items player)) then
 			{
 				["ErrorTitleAndText",["Vehicle Salvage!", format ["You need to be carrying a %1 to salvage a %2!", _toolName, _vehName]]] call ExileClient_gui_toaster_addTemplateToast;
+			
+				ExileClientActionDelayShown = false;
+				ExileClientActionDelayAbort = false;
 			};
 		} forEach salvageVehicle_TOOLS;
 	};
-			
-	ExileClientActionDelayShown = false;
-	ExileClientActionDelayAbort = false;
-	
 };
 
 ["InfoTitleAndText",["Vehicle Salvage!", format ["Salvaging %1!", _vehName]]] call ExileClient_gui_toaster_addTemplateToast;
