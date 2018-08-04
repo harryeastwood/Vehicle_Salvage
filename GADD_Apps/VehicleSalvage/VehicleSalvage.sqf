@@ -6,7 +6,7 @@
 **/
 
 private ["_keyDown","_mouseDown","_startTime","_duration","_sleepTime","_progress","_uiControl","_percentage","_progressBarBackground","_progressBarMaxSize",
-		"_progressBar","_barColour","_junk","_scrapVehicle","_vehClass","_vehName","_cfgClass","_toolNameArray","_counter"];
+		"_progressBar","_barColour","_junk","_scrapVehicle","_vehClass","_vehName","_cfgClass","_toolNameArray","_counter","_salvageFailed"];
 
 // Do not edit below this line unless you know what you are doing!
 
@@ -14,6 +14,7 @@ _scrapVehicle = (_this select 0);
 _vehClass = typeOf (_this select 0);
 _cfgClass = _vehClass call ExileClient_util_gear_getConfigNameByClassName;
 _vehName = getText(configFile >> _cfgClass >> _vehClass >> "displayName");
+_salvageFailed = false;
 
 if (ExileClientActionDelayShown) exitWith
 {
@@ -41,12 +42,10 @@ if (salvageVehicle_REQUIRE_TOOL) then
 				_cfgClass = _x call ExileClient_util_gear_getConfigNameByClassName;
 				_toolName = getText(configFile >> _cfgClass >> _x >> "displayName");
 			
-				if !(_x in (items player)) then
+				if !(_x in (magazines player)) then
 				{
 					["ErrorTitleAndText",["Vehicle Salvage!", format ["You need to be carrying a %1 to salvage a %2!", _toolName, _vehName]]] call ExileClient_gui_toaster_addTemplateToast;
-			
-					ExileClientActionDelayShown = false;
-					ExileClientActionDelayAbort = false;
+					_salvageFailed = true;
 				};
 			} forEach salvageVehicle_REQUIRE_TOOLS_CAR;
 		};
@@ -56,12 +55,10 @@ if (salvageVehicle_REQUIRE_TOOL) then
 				_cfgClass = _x call ExileClient_util_gear_getConfigNameByClassName;
 				_toolName = getText(configFile >> _cfgClass >> _x >> "displayName");
 			
-				if !(_x in (items player)) then
+				if !(_x in (magazines player)) then
 				{
 					["ErrorTitleAndText",["Vehicle Salvage!", format ["You need to be carrying a %1 to salvage a %2!", _toolName, _vehName]]] call ExileClient_gui_toaster_addTemplateToast;
-			
-					ExileClientActionDelayShown = false;
-					ExileClientActionDelayAbort = false;
+					_salvageFailed = true;
 				};
 			} forEach salvageVehicle_REQUIRE_TOOLS_TANK;
 		};
@@ -71,12 +68,10 @@ if (salvageVehicle_REQUIRE_TOOL) then
 				_cfgClass = _x call ExileClient_util_gear_getConfigNameByClassName;
 				_toolName = getText(configFile >> _cfgClass >> _x >> "displayName");
 			
-				if !(_x in (items player)) then
+				if !(_x in (magazines player)) then
 				{
 					["ErrorTitleAndText",["Vehicle Salvage!", format ["You need to be carrying a %1 to salvage a %2!", _toolName, _vehName]]] call ExileClient_gui_toaster_addTemplateToast;
-			
-					ExileClientActionDelayShown = false;
-					ExileClientActionDelayAbort = false;
+					_salvageFailed = true;
 				};
 			} forEach salvageVehicle_REQUIRE_TOOLS_AIR;
 		};
@@ -86,12 +81,10 @@ if (salvageVehicle_REQUIRE_TOOL) then
 				_cfgClass = _x call ExileClient_util_gear_getConfigNameByClassName;
 				_toolName = getText(configFile >> _cfgClass >> _x >> "displayName");
 			
-				if !(_x in (items player)) then
+				if !(_x in (magazines player)) then
 				{
 					["ErrorTitleAndText",["Vehicle Salvage!", format ["You need to be carrying a %1 to salvage a %2!", _toolName, _vehName]]] call ExileClient_gui_toaster_addTemplateToast;
-			
-					ExileClientActionDelayShown = false;
-					ExileClientActionDelayAbort = false;
+					_salvageFailed = true;
 				};
 			} forEach salvageVehicle_REQUIRE_TOOLS_SHIP;
 		};
@@ -101,15 +94,19 @@ if (salvageVehicle_REQUIRE_TOOL) then
 			_cfgClass = _x call ExileClient_util_gear_getConfigNameByClassName;	// Should return "CfgMagazines"
 			_toolName = getText(configFile >> _cfgClass >> _x >> "displayName");
 		
-			if !(_x in (items player)) then
+			if !(_x in (magazines player)) then
 			{
 				["ErrorTitleAndText",["Vehicle Salvage!", format ["You need to be carrying a %1 to salvage a %2!", _toolName, _vehName]]] call ExileClient_gui_toaster_addTemplateToast;
-			
-				ExileClientActionDelayShown = false;
-				ExileClientActionDelayAbort = false;
+				_salvageFailed = true;
 			};
 		} forEach salvageVehicle_TOOLS;
 	};
+};
+
+if (_salvageFailed) exitWith
+{
+	ExileClientActionDelayShown = false;
+	ExileClientActionDelayAbort = true;
 };
 
 ["InfoTitleAndText",["Vehicle Salvage!", format ["Salvaging %1!", _vehName]]] call ExileClient_gui_toaster_addTemplateToast;
